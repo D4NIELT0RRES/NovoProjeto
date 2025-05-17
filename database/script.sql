@@ -12,7 +12,7 @@ create table tbl_jogo (
     descricao        text,
     foto_capa        varchar(200),
     link             varchar(200),
-    id_faixa_etaria int,
+    id_faixa_etaria  int,
     
     foreign key (id_faixa_etaria)
     references tbl_faixa_etaria(id)

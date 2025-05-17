@@ -34,11 +34,11 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 
 //Importe das controles para realizar o CRUD de dados
-const controllerJogo = require('./controller/jogo/controllerJogo.js')
-const controllerEmpresa = require('./controller/empresa/controllerEmpresa.js')
-const controllerVersao = require('./controller/versao/controllerVersao.js')
-const controllerPlataforma = require('./controller/plataforma/controllerPlataforma.js')
-const controllerGenero = require('./controller/genero/controllerGenero.js')
+const controllerJogo        = require('./controller/jogo/controllerJogo.js')
+const controllerEmpresa     = require('./controller/empresa/controllerEmpresa.js')
+const controllerVersao      = require('./controller/versao/controllerVersao.js')
+const controllerPlataforma  = require('./controller/plataforma/controllerPlataforma.js')
+const controllerGenero      = require('./controller/genero/controllerGenero.js')
 const controllerFaixaEtaria = require('./controller/faixa_etaria/controllerFaixa_etaria.js')
 
 //Estabelecendo o formato de dados que deverá chegar no body da aquisição (POST ou PUT)
@@ -59,16 +59,16 @@ app.use((request, response, next) =>{
 /**************************************************************************************************/
 
 //EndPoint para inserir um jogo no banco de dados
-app.post('/V1/controle-jogos/jogo', cors(), bodyParserJson, async function (request, response) {
-    
-    //Recebe o content-type para válidar o tipo de dados da requisição
+app.post('/v1/controle-jogos/jogo', cors(), bodyParserJson, async function (request,response) {
+        
+    //Recebe o content type para validar o tipo de dados da requisição
     let contentType = request.headers['content-type']
-    //Recebe o conteúdo do BODY da requisição
+
+    //Recebe o conteúdo do body da requisição
     let dadosBody = request.body
 
-    //Encaminhando os dados do body da requisição para a Controller inserir no banco de dados
+    //Encaminha os dados do body da requisição para a controller inserir no banco de dados
     let resultJogo = await controllerJogo.inserirJogo(dadosBody,contentType)
-
 
     response.status(resultJogo.status_code)
     response.json(resultJogo)

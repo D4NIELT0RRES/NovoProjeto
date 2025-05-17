@@ -39,15 +39,16 @@ const insertJogo = async function(jogo){
                                             '${jogo.foto_capa}',
                                             '${jogo.link}',
                                             ${jogo.id_faixa_etaria}
-                                        )`
+                                        );`
         //Executa o script SQL no BD e aguarda o retorno no BD
         let result = await prisma.$executeRawUnsafe(sql)
         
-        if(result)
+        if(result){
             return true
-        else
+        }else{
             return false
-    } catch(error){
+        }    
+    } catch(error){        
         return false    
     }
 
@@ -105,7 +106,7 @@ const selectAllJogo = async function(){
 
     try{
         //Script SQL para retornar os dados do BD
-        let sql = `select * from tbl_jogo`
+        let sql = `select * from tbl_jogo order by id desc`
 
         //Executa o script SQL e aguarda o retorno dos dados
         let result = await prisma.$queryRawUnsafe(sql)

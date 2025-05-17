@@ -19,35 +19,38 @@ const controllerFaixaEtaria = require('../faixa_etaria/controllerFaixa_etaria.js
 const inserirJogo = async function(jogo,contentType){
 
     try{
+        
         if(contentType == 'application/json'){
 
-            if( jogo.nome            == undefined ||            jogo.nome            == ''  ||            jogo.nome            == null || jogo.nome.length              > 80 ||
-                jogo.data_lancamento == undefined ||            jogo.data_lancamento == ''  ||            jogo.data_lancamento == null || jogo.data_lancamento.length   > 10 ||
-                jogo.versao          == undefined ||            jogo.versao          == ''  ||            jogo.versao          == null || jogo.versao.length            > 10 ||
-                jogo.tamanho         == undefined ||            jogo.tamanho.length   > 10  ||
-                jogo.descricao       == undefined ||
-                jogo.foto_capa       == undefined ||            jogo.foto_capa.length > 200 ||
-                jogo.link            == undefined ||            jogo.link.length      > 200 ||
-                jogo.id_faixa_etaria == undefined ||            jogo.id_faixa_etaria == ''  
+            if( jogo.nome            == undefined  ||  jogo.nome             == ''   || jogo.nome            == null   || jogo.nome.length            > 80   ||
+                jogo.data_lancamento == undefined  ||  jogo.data_lancamento  == ''   || jogo.data_lancamento == null   || jogo.data_lancamento.length > 10   ||
+                jogo.versao          == undefined  ||  jogo.versao           == ''   || jogo.versao          == null   || jogo.versao.length          > 10   ||
+                jogo.tamanho         == undefined  ||  jogo.tamanho.length   > 10    ||
+                jogo.descricao       == undefined  || 
+                jogo.foto_capa       == undefined  ||  jogo.foto_capa.length > 200   ||
+                jogo.link            == undefined  ||  jogo.link.length      > 200   ||
+                jogo.id_faixa_etaria == undefined ||  jogo.id_faixa_etaria == ''    || jogo.id_faixa_etaria  == null || isNaN(jogo.id_faixa_etaria) || jogo.id_faixa_etaria <= 0 
             ){
                 return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
-                //Encaminha os dados no novo jogo para ser inserido no banco de dados
+                //encamnha os dados do novo jogo para ser inserido no banco de dados
                 let resultJogo = await jogoDAO.insertJogo(jogo)
-
+                                
                 if(resultJogo){
                     return MESSAGE.SUCCESS_CREATED_ITEM //201
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                 }
-
             }
+        
+
         }else{
-            return MESSAGE.ERROR_CONTENT_TYPE//415
+            return MESSAGE.ERROR_CONTENT_TYPE //415
         }
-    }catch(error){
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
-    }
+    
+    } catch(error){
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }   
 }
 
 //Função para atualizar um jogo
@@ -64,7 +67,7 @@ const atualizarJogo = async function(jogo,id,contentType){
                 jogo.foto_capa       == undefined ||            jogo.foto_capa.length > 200 ||
                 jogo.link            == undefined ||            jogo.link.length      > 200 ||
                 id                   == undefined ||            id == ''  || id == null || isNaN(id) || id<= 0 ||
-                jogo.id_faixa_etaria == undefined ||            id_faixa_etaria == '' || id_faixa_etaria == null || isNaN(id_faixa_etaria) || id_faixa_etaria <= 0
+                jogo.id_faixa_etaria == undefined ||            jogo.id_faixa_etaria == '' || jogo.id_faixa_etaria == null || isNaN(jogo.id_faixa_etaria) || jogo.id_faixa_etaria <= 0
             ){
                 return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
