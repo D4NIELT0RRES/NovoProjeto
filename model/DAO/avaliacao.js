@@ -18,11 +18,13 @@ const insertAvaliacao = async function (avaliacao) {
         let sql = `insert into tbl_avaliacao(
                                                 nome,
                                                 email,
+                                                descricao,
                                                 tipo_de_console,
                                                 id_jogo
                                             ) values (
                                                 '${avaliacao.nome}',
                                                 '${avaliacao.email}',
+                                                '${avaliacao.descricao}',
                                                 '${avaliacao.tipo_de_console}',
                                                 ${avaliacao.id_jogo}
                                             );`
@@ -35,7 +37,9 @@ const insertAvaliacao = async function (avaliacao) {
         }else{
             return false
         }  
-    } catch (error) {
+    }catch(error){
+        console.log(error);
+        
         return false
     }
 }
@@ -45,6 +49,7 @@ const updateAvaliacao = async function (avaliacao) {
     try {
         let sql = `update tbl_avaliacao set    nome            = '${avaliacao.nome}',
                                                email           = '${avaliacao.email}',
+                                               descricao       = '${avaliacao.descricao}',
                                                tipo_de_console = '${avaliacao.tipo_de_console}',
                                                id_jogo         = ${avaliacao.id_jogo}
                                                where id        = ${avaliacao.id}` 

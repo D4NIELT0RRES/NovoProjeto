@@ -19,14 +19,15 @@ const inserirAvaliacao = async function (avaliacao, contentType) {
 
             if( avaliacao.nome            == undefined  ||  avaliacao.nome            == ''   || avaliacao.nome            == null   || avaliacao.nome.length > 45 || 
                 avaliacao.email           == undefined  ||  avaliacao.email           == ''   || avaliacao.email           == null   || avaliacao.email.length > 50 ||
+                avaliacao.descricao       == undefined  ||  avaliacao.descricao       == ''   || avaliacao.descricao       == null   ||
                 avaliacao.tipo_de_console == undefined  ||  avaliacao.tipo_de_console == ''   || avaliacao.tipo_de_console == null   || avaliacao.tipo_de_console.length > 45 ||
-                avaliacao.id_jogo         == undefined  || avaliacao.id_jogo          == ''   || avaliacao.id_jogo         == null   || isNaN(avaliacao.id_jogo) || avaliacao.id_jogo <=0
+                avaliacao.id_jogo         == undefined  || avaliacao.id_jogo          == ''   
             ){
                 return MESSAGE.ERROR_REQUIRED_FIELDS//400
             }else{
-                let resulAvaliacao = await avaliacaoDAO.insertAvaliacao(avaliacao)
+                let resultAvaliacao = await avaliacaoDAO.insertAvaliacao(avaliacao)
 
-                if(resulAvaliacao){
+                if(resultAvaliacao){
                     return MESSAGE.SUCCESS_CREATED_ITEM//201
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
@@ -35,7 +36,8 @@ const inserirAvaliacao = async function (avaliacao, contentType) {
         }else{
             return MESSAGE.ERROR_CONTENT_TYPE//415
         }
-    } catch(error){
+    }catch(error){
+        console.log(error);
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
     }
 }
@@ -159,19 +161,19 @@ const buscarAvaliacao =async function (id) {
             let dadosAvaliacao = {}
 
             let resultAvaliacao = await avaliacaoDAO.selectAllAvaliacao()
-        }{
+
             if(resultAvaliacao != false || typeof(resulAvaliacao) == 'object'){
                 if(resultAvaliacao.length > 0){
 
                     dadosAvaliacao.status = true
                     dadosAvaliacao.status_code = 200
-                    dadosAvaliacao.items = resultAvaliacao.length
+                    dadosAvaliacao.games = resultAvaliacao.length
 
-                    for(itemAvaliacao of resulAvaliacao){
+                    for(itemAvaliacao of resultAvaliacao){
                         
-                        let dadosAvaliacao = await controllerJogo.buscarJogo(itemAvaliacao.id_jogo)
+                        let dadosJogo = await controllerJogo.buscarJogo(itemAvaliacao.id_jogo)
 
-                        itemAvaliacao.jogo = dadosAvaliacao.games
+                        itemAvaliacao.jogo = dadosJogo.games
 
                         arrayAvaliacao.push(itemAvaliacao)
                     }
@@ -184,6 +186,8 @@ const buscarAvaliacao =async function (id) {
             }else{
                 return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
             }
+        }else{
+            return MESSAGE.ERROR_REQUIRED_FIELDS//400
         }
     } catch(error){
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
