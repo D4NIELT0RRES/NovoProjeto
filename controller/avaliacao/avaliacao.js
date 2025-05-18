@@ -115,19 +115,38 @@ const listarAvaliacao = async function () {
 
         const arrayAvaliacao = []
         let dadosAvaliacao = {}
-        let resulAvaliacao = await avaliacaoDAO.selectAllAvaliacao()
+        let resultAvaliacao = await avaliacaoDAO.selectAllAvaliacao()
 
-        if(resulAvaliacao != false || typeof(resulAvaliacao) == 'object'){
-            if(resulAvaliacao.length > 0){
+        if(resultAvaliacao != false || typeof(resultAvaliacao) == 'object'){
+            if(resultAvaliacao.length > 0){
 
                 dadosAvaliacao.status = true
                 dadosAvaliacao.status_code = 200
-                dadosAvaliacao.items = resulAvaliacao
+                dadosAvaliacao.items = resultAvaliacao.length
+
+                for(itemAvaliacao of resultAvaliacao){
+
+                    let dadosAvaliacao = await controllerJogo.buscarJogo(itemAvaliacao.id_jogo)
+
+                    itemAvaliacao.jogo = dadosAvaliacao.games
+
+                    delete itemAvaliacao.id_jogo
+
+                    arrayAvaliacao.push(itemAvaliacao)
+                }
+
+                dadosAvaliacao.avaliacao = arrayAvaliacao
+
+                return dadosAvaliacao
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND//400
             }
+        }else{
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
         }
 
-    } catch (error) {
-        
+    }catch(error){
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
     }
 }
 
@@ -135,20 +154,30 @@ const buscarAvaliacao =async function (id) {
     
     try {
         if(id == undefined || id == '' || id == null || isNaN(id) || id<= 0){
-            return MESSAGE.ERROR_REQUIRED_FIELDS//400
-        }else{
+
+            let arrayAvaliacao = []
             let dadosAvaliacao = {}
 
-            let resultAvaliacao = await avaliacaoDAO.selectByIdAvaliacao(parseInt(id))
-
+            let resultAvaliacao = await avaliacaoDAO.selectAllAvaliacao()
+        }{
             if(resultAvaliacao != false || typeof(resulAvaliacao) == 'object'){
                 if(resultAvaliacao.length > 0){
 
                     dadosAvaliacao.status = true
                     dadosAvaliacao.status_code = 200
-                    dadosAvaliacao.games = resultAvaliacao
+                    dadosAvaliacao.items = resultAvaliacao.length
 
-                    return dadosAvaliacao//200
+                    for(itemAvaliacao of resulAvaliacao){
+                        
+                        let dadosAvaliacao = await controllerJogo.buscarJogo(itemAvaliacao.id_jogo)
+
+                        itemAvaliacao.jogo = dadosAvaliacao.games
+
+                        arrayAvaliacao.push(itemAvaliacao)
+                    }
+                    dadosAvaliacao.avaliacao = arrayAvaliacao
+
+                    return dadosAvaliacao
                 }else{
                     return MESSAGE.ERROR_NOT_FOUND//404
                 }
@@ -159,4 +188,12 @@ const buscarAvaliacao =async function (id) {
     } catch(error){
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
     }
+}
+
+module.exports = {
+    inserirAvaliacao,
+    atualizarAvaliacao,
+    excluirAvalicao,
+    listarAvaliacao,
+    buscarAvaliacao
 }

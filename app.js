@@ -40,6 +40,7 @@ const controllerVersao      = require('./controller/versao/controllerVersao.js')
 const controllerPlataforma  = require('./controller/plataforma/controllerPlataforma.js')
 const controllerGenero      = require('./controller/genero/controllerGenero.js')
 const controllerFaixaEtaria = require('./controller/faixa_etaria/controllerFaixa_etaria.js')
+const controllerAvaliacao   = require('./controller/avaliacao/avaliacao.js')
 
 //Estabelecendo o formato de dados que deverá chegar no body da aquisição (POST ou PUT)
 const bodyParserJson = bodyParser.json()
@@ -421,6 +422,7 @@ app.put('/v1/controle-jogos/genero/:id', cors(), bodyParserJson, async function 
 
 
 ////////////////////////// TBL_ FaixaEtaria //////////////////////////
+//EndPoint para inserir uma faixa etária no banco de dados
 app.post('/v1/controle-jogos/faixaEtaria', cors(), bodyParserJson, async function (request, response) {
     
     //Recebe o content-type para válidar o tipo de dados da requisição
@@ -437,6 +439,7 @@ app.post('/v1/controle-jogos/faixaEtaria', cors(), bodyParserJson, async functio
 
 })
 
+//EndPoint para retornar uma lista de faixa etaria
 app.get('/v1/controle-jogos/faixaEtaria', cors(), async function (request, response) {
     
     //Chama a função para lista de classificações
@@ -446,7 +449,8 @@ app.get('/v1/controle-jogos/faixaEtaria', cors(), async function (request, respo
     response.json(resultFaixaEtaria)
 })
 
-app.get('/V1/controle-jogos/faixaEtaria/:id', cors(), async function (request, response) {
+//EndPoint para retornar uma faixa etaria pelo ID
+app.get('/v1/controle-jogos/faixaEtaria/:id', cors(), async function (request, response) {
     
     let idFaixaEtaria = request.params.id
 
@@ -457,6 +461,7 @@ app.get('/V1/controle-jogos/faixaEtaria/:id', cors(), async function (request, r
     response.json(resultFaixaEtaria)
 })
 
+//EndPoint para deletar uma faixa etaria pelo ID
 app.delete('/v1/controle-jogos/faixaEtaria/:id', cors(), bodyParserJson, async function (request, response) {
 
     //Recebe o ID da classificação
@@ -468,6 +473,7 @@ app.delete('/v1/controle-jogos/faixaEtaria/:id', cors(), bodyParserJson, async f
     response.json(resultFaixaEtaria)
 })
 
+//EndPoint para atualizar uma faixa etaria pelo ID
 app.put('/v1/controle-jogos/faixaEtaria/:id', cors(), bodyParserJson, async function (request, response) {
     
     let contentType = request.headers['content-type']
@@ -482,7 +488,65 @@ app.put('/v1/controle-jogos/faixaEtaria/:id', cors(), bodyParserJson, async func
     response.json(resultFaixaEtaria)
 })
 
+////////////////////////// TBL_ AVALIAÇÃO //////////////////////////
+//EndPoint para inserir uma avaliacao no banco de dados
+app.post('/v1/controle-jogos/avaliacao', cors(), bodyParserJson, async function (request,response) {
+    
+    let contentType = request.headers['content-type']
 
+    let dadosBody = request.body
+
+    let resultAvaliacao = await controllerAvaliacao.inserirAvaliacao(dadosBody,contentType)
+
+    response.status(resultAvaliacao.status_code)
+    response.json(resultAvaliacao)
+})
+
+//EndPoint para retornar uma lista de avalicao
+app.get('/v1/controle-jogos/avaliacao', cors(), async function (request,response) {
+    
+    let resultAvaliacao = await controllerAvaliacao.listarAvaliacao()
+
+    response.status(resultAvaliacao.status_code)
+    response.json(resultAvaliacao)
+})
+
+//EndPoint para retornar uma avaliacao pelo ID
+app.get('/v1/controle-jogos/avaliacao/:id', cors(), async function (request,response){
+
+    let idAvaliacao = request.params.id
+
+    let resultAvaliacao = await controllerAvaliacao.buscarAvaliacao(idAvaliacao)
+
+    response.status(resultAvaliacao.status_code)
+    response.json(resultAvaliacao)
+})
+
+//EndPoint para deletar uma avaliacao pelo ID
+app.delete('/v1/controle-jogos/avaliacao/:id', cors(), bodyParserJson, async function (request,response){
+
+    let idAvaliacao = request.params.id
+
+    let resultAvaliacao = await controllerAvaliacao.excluirAvalicao(idAvaliacao)
+
+    response.status(resultAvaliacao.status_code)
+    response.json(resultAvaliacao)
+})
+
+//EndPoint para atualizar uma avaliacao pelo ID
+app.put('/v1/controle-jogos/avaliacao', cors(), bodyParserJson, async function (request,response){
+
+    let contentType = request.headers['content-type']
+
+    let idAvaliacao = request.params.id
+
+    let dadosBody = request.body
+
+    let resultAvaliacao = await controllerAvaliacao.atualizarAvaliacao(dadosBody,idAvaliacao,contentType)
+
+    response.status(resultAvaliacao.status_code)
+    response.json(resultAvaliacao)
+})
 
 
 app.listen('8080', function(){

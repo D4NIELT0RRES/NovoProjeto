@@ -44,10 +44,9 @@ const updateAvaliacao = async function (avaliacao) {
     
     try {
         let sql = `update tbl_avaliacao set    nome            = '${avaliacao.nome}',
-                                               idade           = '${avaliacao.idade}',
                                                email           = '${avaliacao.email}',
                                                tipo_de_console = '${avaliacao.tipo_de_console}',
-                                               id_jogo         = '${avaliacao.id_jogo}'
+                                               id_jogo         = ${avaliacao.id_jogo}
                                                where id        = ${avaliacao.id}` 
         
         //Executa o script SQL no BD e aguarda o retorno no BD     
@@ -65,10 +64,8 @@ const updateAvaliacao = async function (avaliacao) {
 
 const deleteAvaliacao = async function (id) {
     
-    try {
-        let idAvaliacao = id
-        
-        let sql = `delete from tbl_avaliacao where id=${idAvaliacao}`
+    try {        
+        let sql = `delete from tbl_avaliacao where id=${id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
 
@@ -78,7 +75,7 @@ const deleteAvaliacao = async function (id) {
             return false
         }
     } catch (error) {
-        
+        return false
     }
 }
 
@@ -97,15 +94,14 @@ const selectAllAvaliacao = async function () {
             return false
         }
     } catch (error) {
-        
+        return false
     }
 }
 
 const selectByIdAvaliacao = async function (id) {
     
     try {
-        let idAvaliacao = id
-        let sql = `select * from tbl_avaliacao where id = ${idAvaliacao}`
+        let sql = `select * from tbl_avaliacao where id = ${id}`
 
         let result = await prisma.$queryRawUnsafe(sql)
 
@@ -114,8 +110,8 @@ const selectByIdAvaliacao = async function (id) {
         }else{
             return false
         }
-    } catch (error) {
-        
+    }catch(error){
+        return false
     }
 }
 
