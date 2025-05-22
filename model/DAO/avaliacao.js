@@ -106,7 +106,8 @@ const selectAllAvaliacao = async function () {
 const selectByIdAvaliacao = async function (id) {
     
     try {
-        let sql = `select * from tbl_avaliacao where id = ${id}`
+        let idAvaliacao = id
+        let sql = `select * from tbl_avaliacao where id=${idAvaliacao}`
 
         let result = await prisma.$queryRawUnsafe(sql)
 
@@ -116,6 +117,7 @@ const selectByIdAvaliacao = async function (id) {
             return false
         }
     }catch(error){
+        console.log(error)
         return false
     }
 }

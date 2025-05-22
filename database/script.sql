@@ -18,6 +18,56 @@ create table tbl_jogo (
     references tbl_faixa_etaria(id)
 );
 
+create table tbl_plataforma_jogo(
+	id int not null primary key auto_increment,
+    id_plataforma int not null,
+    id_jogo int not null,
+    id_versao int not null,
+    FOREIGN KEY (id_plataforma) REFERENCES tbl_plataforma(id),
+    FOREIGN KEY (id_jogo) REFERENCES tbl_jogo(id),
+    FOREIGN KEY (id_versao) REFERENCES tbl_versao(id)
+);
+
+create table tbl_plataforma (
+	id   int not null primary key auto_increment,
+    nome varchar (50) 
+);
+
+create table tbl_genero (
+	id int not null primary key auto_increment,
+    tipo_de_categoria varchar (45)
+);
+
+create table tbl_genero_jogo(
+	id int not null primary key auto_increment,
+    id_jogo int not null,
+    id_genero int not null,
+    FOREIGN KEY (id_jogo) REFERENCES tbl_jogo(id),
+    FOREIGN KEY (id_genero) REFERENCES tbl_genero(id)
+);
+
+create table tbl_jogo_empresa(
+	id int not null primary key auto_increment,
+    id_jogo int not null,
+    id_empresa int not null,
+    FOREIGN KEY (id_jogo) REFERENCES tbl_jogo(id),
+    FOREIGN KEY (id_empresa) REFERENCES tbl_empresa(id)
+);
+
+
+create table tbl_avaliacao(
+	id               int not null primary key auto_increment,
+    nome             varchar (45) not null,
+    email            varchar (50) not null,
+    descricao        varchar (500)not null,
+    tipo_de_console  varchar (10) not null,
+    id_jogo int,
+    
+    foreign key (id_jogo)
+    references tbl_jogo(id)
+    
+);
+
 create table tbl_empresa (
 	id                int not null primary key auto_increment,
     nome              varchar (45) not null,
@@ -36,24 +86,20 @@ create table tbl_versao (
     tamanho       varchar (45)
 );
 
-create table tbl_plataforma (
-	id   int not null primary key auto_increment,
-    nome varchar (50) 
-);
+
 
 create table tbl_faixa_etaria(
 	id int not null primary key auto_increment,
     tipo_de_classificacao varchar (40)
 );
 
-create table tbl_genero (
-	id int not null primary key auto_increment,
-    tipo_de_categoria varchar (45)
-);
+
 
 select * from tbl_jogo where id=3;
 show tables;
 desc tbl_jogo;
 select * from tbl_jogo;
 delete from tbl_jogo where id=5;
+
+drop table tbl_avaliacao
 

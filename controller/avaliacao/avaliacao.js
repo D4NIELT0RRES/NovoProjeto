@@ -49,6 +49,7 @@ const atualizarAvaliacao = async function (avaliacao,id,contentType) {
 
             if( avaliacao.nome            == undefined  ||  avaliacao.nome            == ''   || avaliacao.nome            == null   || avaliacao.nome.length > 45 || 
                 avaliacao.email           == undefined  ||  avaliacao.email           == ''   || avaliacao.email           == null   || avaliacao.email.length > 50 ||
+                avaliacao.descricao       == undefined  ||  avaliacao.descricao       == ''   || avaliacao.descricao       == null   || 
                 avaliacao.tipo_de_console == undefined  ||  avaliacao.tipo_de_console == ''   || avaliacao.tipo_de_console == null   || avaliacao.tipo_de_console.length > 45 ||
                 id == undefined || id == '' || id == null || isNaN(id) || id<= 0 ||
                 avaliacao.id_jogo         == undefined ||   avaliacao.id_jogo         == ''   || avaliacao.id_jogo         == null   || isNaN(avaliacao.id_jogo) || avaliacao.id_jogo <= 0
@@ -57,7 +58,7 @@ const atualizarAvaliacao = async function (avaliacao,id,contentType) {
             }else{
                 let resultAvaliacao = await avaliacaoDAO.selectByIdAvaliacao(parseInt(id))
 
-                if(resultAvaliacao != false || typeof(resulAvaliacao) == 'object'){
+                if(resultAvaliacao != false || typeof(resultAvaliacao) == 'object'){
                     if(resultAvaliacao.length > 0){
 
                         avaliacao.id = parseInt(id)
@@ -156,28 +157,18 @@ const buscarAvaliacao =async function (id) {
     
     try {
         if(id == undefined || id == '' || id == null || isNaN(id) || id<= 0){
-
-            let arrayAvaliacao = []
+            return MESSAGE.ERROR_REQUIRED_FIELDS//400
+        }else{
             let dadosAvaliacao = {}
 
-            let resultAvaliacao = await avaliacaoDAO.selectAllAvaliacao()
+            let resulAvaliacao = await avaliacaoDAO.selectByIdAvaliacao(parseInt(id))
 
-            if(resultAvaliacao != false || typeof(resulAvaliacao) == 'object'){
-                if(resultAvaliacao.length > 0){
+            if(resulAvaliacao != false || typeof(resulAvaliacao) == 'object'){
+                if(resulAvaliacao.length > 0){
 
                     dadosAvaliacao.status = true
                     dadosAvaliacao.status_code = 200
-                    dadosAvaliacao.games = resultAvaliacao.length
-
-                    for(itemAvaliacao of resultAvaliacao){
-                        
-                        let dadosJogo = await controllerJogo.buscarJogo(itemAvaliacao.id_jogo)
-
-                        itemAvaliacao.jogo = dadosJogo.games
-
-                        arrayAvaliacao.push(itemAvaliacao)
-                    }
-                    dadosAvaliacao.avaliacao = arrayAvaliacao
+                    dadosAvaliacao.games = resulAvaliacao
 
                     return dadosAvaliacao
                 }else{
@@ -186,10 +177,8 @@ const buscarAvaliacao =async function (id) {
             }else{
                 return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
             }
-        }else{
-            return MESSAGE.ERROR_REQUIRED_FIELDS//400
         }
-    } catch(error){
+    }catch(error){        
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
     }
 }

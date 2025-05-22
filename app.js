@@ -534,7 +534,7 @@ app.delete('/v1/controle-jogos/avaliacao/:id', cors(), bodyParserJson, async fun
 })
 
 //EndPoint para atualizar uma avaliacao pelo ID
-app.put('/v1/controle-jogos/avaliacao', cors(), bodyParserJson, async function (request,response){
+app.put('/v1/controle-jogos/avaliacao/:id', cors(), bodyParserJson, async function (request,response){
 
     let contentType = request.headers['content-type']
 
