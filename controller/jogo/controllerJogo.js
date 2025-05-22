@@ -51,7 +51,7 @@ const inserirJogo = async function(jogo,contentType){
                         }
                     }
 
-                    for(itemGenero of jogo.genero){
+                    for(itemGenero of jogo.generos){
                         itemGenero.id_jogo = resultJogo.id
 
                         let resultGenero = await controllerGeneroJogo.inserirJogoGenero(itemGenero,contentType)
@@ -202,13 +202,13 @@ const listarJogo = async function(){
                     delete itemJogo.id_faixa_etaria
 
                     let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorJogo(itemJogo.id)
-                    itemJogo.jogos = dadosPlataforma.items
+                    itemJogo.plataforma = dadosPlataforma.plataforma
 
                     let dadosVersaoPlataformaJogo = await controllerPlataformaJogo.buscarVersaoPorJogo(itemJogo.id)
-                    itemJogo.versao = dadosVersaoPlataformaJogo.versao
+                    itemJogo.versoes = dadosVersaoPlataformaJogo.games
 
                     let dadosGeneroJogo = await controllerGeneroJogo.buscarGeneroPorJogo(itemJogo.id)
-                    itemJogo.genero_jogos = dadosGeneroJogo.genero_jogos
+                    itemJogo.generos = dadosGeneroJogo.generos
 
                     let dadosEmpresa = await controllerJogoEmpresa.buscarEmpresaPorJogo(itemJogo.id)
                     itemJogo.empresa = dadosEmpresa.empresa
@@ -274,15 +274,15 @@ const buscarJogo = async function(id){
                         //o ID dentro dos dados da classificação
                         delete itemJogo.id_faixa_etaria
     
-                        let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaJogo(itemJogo.id)
-                        itemJogo.plataforma = dadosPlataforma.plataforma
-    
+                        let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorJogo(itemJogo.id)
+                        itemJogo.plataforma = dadosPlataforma.items
+
                         let dadosVersaoPlataformaJogo = await controllerPlataformaJogo.buscarVersaoPorJogo(itemJogo.id)
-                        itemJogo.versao = dadosVersaoPlataformaJogo.versao
-    
+                        itemJogo.versoes = dadosVersaoPlataformaJogo.versoes
+
                         let dadosGeneroJogo = await controllerGeneroJogo.buscarGeneroPorJogo(itemJogo.id)
-                        itemJogo.genero = dadosGeneroJogo.genero
-    
+                        itemJogo.generos = dadosGeneroJogo.generos
+
                         let dadosEmpresa = await controllerJogoEmpresa.buscarEmpresaPorJogo(itemJogo.id)
                         itemJogo.empresa = dadosEmpresa.empresa
     

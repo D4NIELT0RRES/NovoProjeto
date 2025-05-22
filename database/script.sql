@@ -37,9 +37,12 @@ INSERT INTO tbl_plataforma_jogo (
     id_versao
 ) VALUES (
     1,  
-    1,  
+    6,  
     1  
 );
+
+INSERT INTO tbl_jogo_empresa (id_jogo, id_empresa)
+VALUES (12, 1);
 
 
 create table tbl_genero_jogo(
@@ -71,6 +74,9 @@ create table tbl_avaliacao(
     references tbl_jogo(id)
     
 );
+
+
+
 
 create table tbl_empresa (
 	id                int not null primary key auto_increment,
@@ -107,22 +113,21 @@ create table tbl_genero (
     tipo_de_categoria varchar (45)
 );
 
-select tbl_empresa.* from tbl_jogo
-                      inner join tbl_jogo_empresa
-                        on tbl_jogo.id = tbl_jogo_empresa.id_jogo
-                      inner join tbl_empresa
-                        on tbl_empresa.id = tbl_jogo_empresa.id_empresa
-                    where tbl_jogo.id = 1;
+SELECT tbl_empresa.*
+FROM tbl_jogo
+INNER JOIN tbl_jogo_empresa ON tbl_jogo.id = tbl_jogo_empresa.id_jogo
+INNER JOIN tbl_empresa ON tbl_empresa.id = tbl_jogo_empresa.id_empresa
+WHERE tbl_jogo.id = 6;
 
 
 
-select * from tbl_jogo where id=3;
+select * from tbl_jogo where id=12;
 show tables;
 desc tbl_faixa_etaria;
-
-desc tbl_jogo;
+select * from tbl_avaliacao order by id desc;
+desc tbl_avaliacao;
 select * from tbl_faixa_etaria;
 delete from tbl_jogo where id=5;
 
-drop table tbl_avaliacao
+select * from tbl_jogo_empresa;
 

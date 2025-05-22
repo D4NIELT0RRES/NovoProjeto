@@ -133,7 +133,7 @@ const listarPlataformaJogo = async function(){
                 dadosPlataformaJogo.status = true
                 dadosPlataformaJogo.status_code = 200
                 dadosPlataformaJogo.items = resultPlataformaJogo.length
-                dadosPlataformaJogo.jogos = resultPlataformaJogo
+                dadosPlataformaJogo.plata = resultPlataformaJogo
 
                 return dadosPlataformaJogo
             }else{
@@ -239,6 +239,65 @@ const buscarVersaoPorJogo = async function(idJogo){
     }
 }
 
+const buscarJogoPorVersap = async function (idVersao) {
+    
+    try {
+        if(idVersao == '' || idVersao == undefined || idVersao == null || isNaN(idVersao) || idVersao <=0){
+            return MESSAGE.ERROR_REQUIRED_FIELDS //400
+        }else{
+            dadosPlataformaJogo = {}
+
+            let resultPlataformaJogo = await plataformaJogoDAO.selectJogoByIdVersao(parseInt(idVersao))
+
+            if(resultPlataformaJogo != false || typeof(resultPlataformaJogo) == 'object'){
+                if(resultPlataformaJogo.length > 0){
+                    dadosPlataformaJogo.status = true
+                    dadosPlataformaJogo.status_code = 200
+                    dadosPlataformaJogo.jogos = resultPlataformaJogo
+
+                    return dadosPlataformaJogo
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+            }
+        }
+    }catch(error){
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER   
+    }
+}
+
+const buscarVersaoPorPlataforma = async function (idPlataforma) {
+    
+    try {
+        if(idPlataforma == '' || idPlataforma == undefined || idPlataforma == null || isNaN(idPlataforma) || idPlataforma <=0){
+            return MESSAGE.ERROR_REQUIRED_FIELDS //400
+        }else{
+            dadosPlataformaJogo = {}
+
+            let resultPlataformaJogo = await plataformaJogoDAO.selectVersaoBydIdPlataforma(parseInt(idPlataforma))
+
+            if(resultPlataformaJogo != false || typeof(resultPlataformaJogo) == 'object'){
+                if(resultPlataformaJogo.length > 0){
+
+                    dadosPlataformaJogo.status = true
+                    dadosPlataformaJogo.status_code = 200
+                    dadosPlataformaJogo.versoes = resultPlataformaJogo
+
+                    return dadosPlataformaJogo
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+            }
+        }
+    }catch(error){
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER   
+    }
+}
+
 module.exports = {
     inserirPlataformaJogo,
     atualizarPlataformaJogo,
@@ -246,5 +305,7 @@ module.exports = {
     listarPlataformaJogo,
     buscarPlataformaJogo,
     buscarPlataformaPorJogo,
-    buscarVersaoPorJogo
+    buscarVersaoPorJogo,
+    buscarJogoPorVersap,
+    buscarVersaoPorPlataforma
 }

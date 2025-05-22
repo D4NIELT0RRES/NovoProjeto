@@ -142,37 +142,6 @@ const listarJogoGenero = async function(){
     }
 }
 
-//Função para tratar o retorno de um genero filtrando pelo ID do DAO
-const buscarJogoGenero = async function(id){
-    try {
-        if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
-            return MESSAGE.ERROR_REQUIRED_FIELDS //400
-        }else{
-            let dadosGeneroJogos = {}
-
-            let resultGeneroJogo = await jogoGeneroDAO.selectByIdJogoGenero(parseInt(id))
-            
-            if(resultGeneroJogo != false || typeof(resultGeneroJogo) == 'object'){
-                if(resultGeneroJogo.length > 0){
-                     //Criando um JSON de retorno de dados para a API
-                     dadosGeneroJogos.status = true
-                     dadosGeneroJogos.status_code = 200
-                     dadosGeneroJogos.generos = resultGeneroJogo
-
-                    return dadosGeneroJogos //200
-                }else{
-                    return MESSAGE.ERROR_NOT_FOUND //404
-                }
-            }else{
-                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
-            }
-        }
-
-    }catch(error){
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
-    }
-}
-
 const buscarGeneroPorJogo = async function(idJogo){
     try {
         if(idJogo == '' || idJogo == undefined || idJogo == null || isNaN(idJogo) || idJogo <=0){
@@ -202,12 +171,42 @@ const buscarGeneroPorJogo = async function(idJogo){
     }
 }
 
+//Função para tratar o retorno de um genero filtrando pelo ID do DAO
+const buscarJogoPorGenero = async function(idGenero){
+    try {
+        if(idGenero == '' || idGenero == undefined || idGenero == null || isNaN(idGenero) || idGenero <=0){
+            return MESSAGE.ERROR_REQUIRED_FIELDS //400
+        }else{
+            let dadosGeneroJogos = {}
+
+            let resultGeneroJogo = await jogoGeneroDAO.selectJogoByIdGenero(parseInt(idGenero))
+            
+            if(resultGeneroJogo != false || typeof(resultGeneroJogo) == 'object'){
+                if(resultGeneroJogo.length > 0){
+                     //Criando um JSON de retorno de dados para a API
+                     dadosGeneroJogos.status = true
+                     dadosGeneroJogos.status_code = 200
+                     dadosGeneroJogos.jogos = resultGeneroJogo
+
+                    return dadosGeneroJogos //200
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND //404
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+            }
+        }
+    }catch(error){
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+}
+
 module.exports = {
     inserirJogoGenero,
     atualizarJogoGenero,
     excluirJogoGenero,
     listarJogoGenero,
-    buscarJogoGenero,
+    buscarJogoPorGenero,
     buscarGeneroPorJogo
 }
 

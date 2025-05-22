@@ -133,7 +133,6 @@ const listarVersao = async function () {
                 return MESSAGE.ERROR_NOT_FOUND//400
             }
         }else{
-            console.log(typeof(resultVersao))
             return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
         }
     } catch (error) {

@@ -157,12 +157,12 @@ const selectJogoByIdVersao = async function (idVersao){
 //Função para buscar uma versão pelo ID da Plataforma
 const selectVersaoBydIdPlataforma = async function (idPlataforma){
   try{
-    let sql= `select tbl_versao.* from tbl_plataforma
-                    inner join tbl_plataforma_jogo
-                      on tbl_versao.id = tbl_plataforma_jogo.id_versao
-                    inner join tbl_plataforma
-                      on tbl_plataforma.id = tbl_plataforma_jogo.id_plataforma
-                  where tbl_plataforma.id = ${idPlataforma}`
+    let sql= `SELECT tbl_versao.* FROM tbl_versao
+                  INNER JOIN tbl_plataforma_jogo
+                    ON tbl_versao.id = tbl_plataforma_jogo.id_versao
+                  INNER JOIN tbl_plataforma
+                    ON tbl_plataforma.id = tbl_plataforma_jogo.id_plataforma
+                  WHERE tbl_plataforma.id = ${idPlataforma}`
 
     let result = await prisma.$queryRawUnsafe(sql)
 
@@ -225,9 +225,9 @@ const selectJogoByIdPlataforma = async function(idPlataforma){
   try {
         let sql = `select tbl_jogo.* from tbl_plataforma 
                             inner join tbl_plataforma_jogo
-                            on tbl_plataforma.id = tbl_jogo_plataforma.id_plataforma
+                            on tbl_plataforma.id = tbl_plataforma_jogo.id_plataforma
                             inner join tbl_jogo
-                            on tbl_jogo.id = tbl_jogo_plataforma.id_jogo
+                            on tbl_jogo.id = tbl_plataforma_jogo.id_jogo
                         where tbl_plataforma.id = ${idPlataforma}`
 
         let result = await prisma.$queryRawUnsafe(sql)
@@ -248,10 +248,10 @@ module.exports = {
     deletePlataformaJogo,
     selectAllPlataformaJogo,
     selectByIdPlataformaJogo,
+    selectPlataformaByIdJogo,
+    selectJogoByIdPlataforma,
     selectVersaoByIdJogo,
     selectJogoByIdVersao,
     selectVersaoBydIdPlataforma,
-    selectPlataformaByIdVersao,
-    selectPlataformaByIdJogo,
-    selectJogoByIdPlataforma
+    selectPlataformaByIdVersao
 }

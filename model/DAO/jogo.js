@@ -110,7 +110,7 @@ const selectAllJogo = async function(){
 
     try{
         //Script SQL para retornar os dados do BD
-        let sql = `select * from tbl_jogo order by id desc`
+        let sql = `select * from tbl_jogo `
 
         //Executa o script SQL e aguarda o retorno dos dados
         let result = await prisma.$queryRawUnsafe(sql)

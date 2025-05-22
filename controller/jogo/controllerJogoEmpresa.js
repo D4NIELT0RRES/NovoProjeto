@@ -138,36 +138,6 @@ const listarJogoEmpresa = async function(){
     }
 }
 
-const buscarJogoEmpresa = async function(id){
-    try {
-        if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
-            return MESSAGE.ERROR_REQUIRED_FIELDS //400
-        }else{
-
-            let dadosJogoEmpresa = {}
-
-            let resultJogoEmpresa = await jogoEmpresaDAO.selectByIdJogoEmpresa(parseInt(id))
-            
-            if(resultJogoEmpresa != false || typeof(resultJogoEmpresa) == 'object'){
-                if(resultJogoEmpresa.length > 0){
-                     //Criando um JSON de retorno de dados para a API
-                     dadosJogoEmpresa.status = true
-                     dadosJogoEmpresa.status_code = 200
-                     dadosJogoEmpresa.generos = resultJogoEmpresa
-
-                    return dadosJogoEmpresa //200
-                }else{
-                    return MESSAGE.ERROR_NOT_FOUND //404
-                }
-            }else{
-                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
-            }
-        }
-    }catch(error){
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
-    }
-}
-
 const buscarEmpresaPorJogo = async function(idJogo){
     try {
         if(idJogo == '' || idJogo == undefined || idJogo == null || isNaN(idJogo) || idJogo <=0){
@@ -175,7 +145,7 @@ const buscarEmpresaPorJogo = async function(idJogo){
         }else{
             let dadosEmpresaPorJogo = {}
 
-            let resultEmpresaPorJogo = await jogoEmpresaDAO.selectByIdJogoEmpresa(parseInt(idJogo)) // SEMPRE COLOQUE O NOME CERTO DA FUNÇÃO
+            let resultEmpresaPorJogo = await jogoEmpresaDAO.selectEmpresaByIdJogo(parseInt(idJogo)) // SEMPRE COLOQUE O NOME CERTO DA FUNÇÃO
             
             if(resultEmpresaPorJogo != false || typeof(resultEmpresaPorJogo) == 'object'){
                 if(resultEmpresaPorJogo.length > 0){
@@ -197,6 +167,35 @@ const buscarEmpresaPorJogo = async function(idJogo){
     }
 }
 
+const buscarJogoEmpresa = async function(idEmpresa){
+    try {
+        if(idEmpresa == '' || idEmpresa == undefined || idEmpresa == null || isNaN(idEmpresa) || idEmpresa <=0){
+            return MESSAGE.ERROR_REQUIRED_FIELDS //400
+        }else{
+
+            let dadosJogoEmpresa = {}
+
+            let resultJogoEmpresa = await jogoEmpresaDAO.selectJogoByIdEmpresa(parseInt(idEmpresa))
+            
+            if(resultJogoEmpresa != false || typeof(resultJogoEmpresa) == 'object'){
+                if(resultJogoEmpresa.length > 0){
+                     //Criando um JSON de retorno de dados para a API
+                     dadosJogoEmpresa.status = true
+                     dadosJogoEmpresa.status_code = 200
+                     dadosJogoEmpresa.jogos = resultJogoEmpresa
+
+                    return dadosJogoEmpresa //200
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND //404
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+            }
+        }
+    }catch(error){
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+}
 module.exports = {
     inserirJogoEmpresa,
     atualizarJogoEmpresa,
