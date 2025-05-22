@@ -421,6 +421,11 @@ app.put('/v1/controle-jogos/genero/:id', cors(), bodyParserJson, async function 
 })
 
 
+
+
+
+
+
 ////////////////////////// TBL_ FaixaEtaria //////////////////////////
 //EndPoint para inserir uma faixa etária no banco de dados
 app.post('/v1/controle-jogos/faixaEtaria', cors(), bodyParserJson, async function (request, response) {
@@ -487,6 +492,11 @@ app.put('/v1/controle-jogos/faixaEtaria/:id', cors(), bodyParserJson, async func
     response.status(resultFaixaEtaria.status_code)
     response.json(resultFaixaEtaria)
 })
+
+
+
+
+
 
 ////////////////////////// TBL_ AVALIAÇÃO //////////////////////////
 //EndPoint para inserir uma avaliacao no banco de dados

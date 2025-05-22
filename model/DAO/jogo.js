@@ -44,11 +44,15 @@ const insertJogo = async function(jogo){
         let result = await prisma.$executeRawUnsafe(sql)
         
         if(result){
-            return true
+            let sqlSelect = `SELECT * FROM tbl_jogo WHERE nome = '${jogo.nome}' ORDER BY id DESC LIMIT 1` // DEVOLVER O ID DO JOGO PARA USAR NA CONTROLLER
+            let criado = await prisma.$queryRawUnsafe(sqlSelect) 
+            return criado[0] 
         }else{
             return false
         }    
     } catch(error){        
+        console.log(error);
+        
         return false    
     }
 

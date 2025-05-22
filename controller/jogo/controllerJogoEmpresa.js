@@ -124,7 +124,7 @@ const listarJogoEmpresa = async function(){
                 dadosJogoEmpresa.status = true
                 dadosJogoEmpresa.status_code = 200
                 dadosJogoEmpresa.items = resultJogoEmpresa.length
-                dadosJogoEmpresa.jogos_desenvolvedoras = resultJogoEmpresa
+                dadosJogoEmpresa.jogo_empresa = resultJogoEmpresa
 
                 return dadosJogoEmpresa
             }else{
@@ -182,7 +182,7 @@ const buscarEmpresaPorJogo = async function(idJogo){
                      //Criando um JSON de retorno de dados para a API
                      dadosEmpresaPorJogo.status = true
                      dadosEmpresaPorJogo.status_code = 200
-                     dadosEmpresaPorJogo.desenvolvedoras = resultEmpresaPorJogo
+                     dadosEmpresaPorJogo.empresa = resultEmpresaPorJogo
 
                     return dadosEmpresaPorJogo //200
                 }else{

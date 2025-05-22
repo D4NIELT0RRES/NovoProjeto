@@ -39,7 +39,6 @@ const insertEmpresa = async function (empresa) {
             return false
         }    
     }catch(error){
-        console.log(error)
         return false    
     }
 }

@@ -15,6 +15,10 @@ const { deserializeRawResult } = require('@prisma/client/runtime/library')
 //Import das controllers para criar as relações com a faixa_etaria
 const controllerFaixaEtaria = require('../faixa_etaria/controllerFaixa_etaria.js')
 
+const controllerGeneroJogo     = require('../jogo/controllerGeneroJogo.js')
+const controllerJogoEmpresa    = require('../jogo/controllerJogoEmpresa.js')
+const controllerPlataformaJogo = require('../jogo/controllerPlataformaJogo.js')
+
 //Função para inserir um novo jogo
 const inserirJogo = async function(jogo,contentType){
 
@@ -29,7 +33,7 @@ const inserirJogo = async function(jogo,contentType){
                 jogo.descricao       == undefined  || 
                 jogo.foto_capa       == undefined  ||  jogo.foto_capa.length > 200   ||
                 jogo.link            == undefined  ||  jogo.link.length      > 200   ||
-                jogo.id_faixa_etaria == undefined ||  jogo.id_faixa_etaria == ''    || jogo.id_faixa_etaria  == null || isNaN(jogo.id_faixa_etaria) || jogo.id_faixa_etaria <= 0 
+                jogo.id_faixa_etaria == undefined  ||  jogo.id_faixa_etaria == ''    || jogo.id_faixa_etaria  == null || isNaN(jogo.id_faixa_etaria) || jogo.id_faixa_etaria <= 0 
             ){
                 return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
@@ -37,9 +41,38 @@ const inserirJogo = async function(jogo,contentType){
                 let resultJogo = await jogoDAO.insertJogo(jogo)
                                 
                 if(resultJogo){
-                    return MESSAGE.SUCCESS_CREATED_ITEM //201
+                    for(itemPlataforma of jogo.plataforma){
+                        itemPlataforma.id_jogo = resultJogo.id
+
+                        let resultPlataforma = await controllerPlataformaJogo.inserirPlataformaJogo(itemPlataforma,contentType)
+
+                        if(!resultPlataforma){
+                            return MESSAGE.ERROR_CONTENT_TYPE
+                        }
+                    }
+
+                    for(itemGenero of jogo.genero){
+                        itemGenero.id_jogo = resultJogo.id
+
+                        let resultGenero = await controllerGeneroJogo.inserirJogoGenero(itemGenero,contentType)
+
+                        if(!resultGenero){
+                            return MESSAGE.ERROR_CONTENT_TYPE
+                        }
+                    }
+
+                    for(itemEmpresa of jogo.empresa){
+                        itemEmpresa.id_jogo = resultJogo.id
+
+                        let resultEmpresa = await controllerJogoEmpresa.inserirJogoEmpresa(itemEmpresa,contentType)
+
+                        if(!resultEmpresa){
+                            return MESSAGE.ERROR_CONTENT_TYPE
+                        }
+                    }
+                    return MESSAGE.SUCCESS_CREATED_ITEM
                 }else{
-                    return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+                    return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
                 }
             }
         
@@ -168,6 +201,18 @@ const listarJogo = async function(){
                     //o ID dentro dos dados da classificação
                     delete itemJogo.id_faixa_etaria
 
+                    let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorJogo(itemJogo.id)
+                    itemJogo.jogos = dadosPlataforma.items
+
+                    let dadosVersaoPlataformaJogo = await controllerPlataformaJogo.buscarVersaoPorJogo(itemJogo.id)
+                    itemJogo.versao = dadosVersaoPlataformaJogo.versao
+
+                    let dadosGeneroJogo = await controllerGeneroJogo.buscarGeneroPorJogo(itemJogo.id)
+                    itemJogo.genero_jogos = dadosGeneroJogo.genero_jogos
+
+                    let dadosEmpresa = await controllerJogoEmpresa.buscarEmpresaPorJogo(itemJogo.id)
+                    itemJogo.empresa = dadosEmpresa.empresa
+
                     //Adiciona o JSON do filme, agora com os dados da classificação
                     //em um array
                     arrayJogos.push(itemJogo)
@@ -177,6 +222,7 @@ const listarJogo = async function(){
                 dadosJogos.jogos = arrayJogos
 
                 return dadosJogos//200
+
             }else{
                 return MESSAGE.ERROR_NOT_FOUND//400
             }
@@ -184,6 +230,7 @@ const listarJogo = async function(){
             return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
         }
     }catch (error){
+        console.log(error)
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
     }
     
@@ -196,6 +243,9 @@ const buscarJogo = async function(id){
 
     try{
 
+        let arrayJogos = []
+        let idJogo = id
+
         if(id == "" || id == undefined || id == null || isNaN(id) || id <= 0){
             return MESSAGE.ERROR_REQUIRED_FIELDS//400
         }else{
@@ -203,8 +253,7 @@ const buscarJogo = async function(id){
             let dadosJogos = {}
 
             //Chama a função para retornar os dados do jogo
-            let resultJogo = await jogoDAO.selectByIdJogo(parseInt(id))
-
+            let resultJogo = await jogoDAO.selectByIdJogo(parseInt(idJogo))
             if(resultJogo != false || typeof(resultJogo) == 'object'){
                 if(resultJogo.length > 0){
 
@@ -212,6 +261,38 @@ const buscarJogo = async function(id){
                     dadosJogos.status = true
                     dadosJogos.status_code = 200
                     dadosJogos.games = resultJogo
+
+                    for(itemJogo of resultJogo){
+                        //Busca os dados da classificação na controller de classificação
+                        //Utilizando o ID da classificação (Chave estrangeira)
+                        let dadosFaixaEtaria = await controllerFaixaEtaria.buscarFaixaEtaria(itemJogo.id_faixa_etaria)
+                        
+                        //Adicionando um atributo "classificacao" no JSON de filmes
+                        itemJogo.faixa_etaria = dadosFaixaEtaria.games
+    
+                        //Remove o atributo id_classificacao do JSON de filmes, pois já temos
+                        //o ID dentro dos dados da classificação
+                        delete itemJogo.id_faixa_etaria
+    
+                        let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaJogo(itemJogo.id)
+                        itemJogo.plataforma = dadosPlataforma.plataforma
+    
+                        let dadosVersaoPlataformaJogo = await controllerPlataformaJogo.buscarVersaoPorJogo(itemJogo.id)
+                        itemJogo.versao = dadosVersaoPlataformaJogo.versao
+    
+                        let dadosGeneroJogo = await controllerGeneroJogo.buscarGeneroPorJogo(itemJogo.id)
+                        itemJogo.genero = dadosGeneroJogo.genero
+    
+                        let dadosEmpresa = await controllerJogoEmpresa.buscarEmpresaPorJogo(itemJogo.id)
+                        itemJogo.empresa = dadosEmpresa.empresa
+    
+                        //Adiciona o JSON do filme, agora com os dados da classificação
+                        //em um array
+                        arrayJogos.push(itemJogo)
+    
+                    }
+
+                    dadosJogos.jogos = arrayJogos
 
                     return dadosJogos//200
                 }else{

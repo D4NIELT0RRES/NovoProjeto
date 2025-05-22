@@ -39,7 +39,6 @@ const insertAvaliacao = async function (avaliacao) {
         }  
     }catch(error){
         console.log(error);
-        
         return false
     }
 }
@@ -98,7 +97,7 @@ const selectAllAvaliacao = async function () {
         }else{
             return false
         }
-    } catch (error) {
+    }catch(error){
         return false
     }
 }
