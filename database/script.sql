@@ -28,16 +28,6 @@ create table tbl_plataforma_jogo(
     FOREIGN KEY (id_versao) REFERENCES tbl_versao(id)
 );
 
-create table tbl_plataforma (
-	id   int not null primary key auto_increment,
-    nome varchar (50) 
-);
-
-create table tbl_genero (
-	id int not null primary key auto_increment,
-    tipo_de_categoria varchar (45)
-);
-
 create table tbl_genero_jogo(
 	id int not null primary key auto_increment,
     id_jogo int not null,
@@ -91,6 +81,16 @@ create table tbl_versao (
 create table tbl_faixa_etaria(
 	id int not null primary key auto_increment,
     tipo_de_classificacao varchar (40)
+);
+
+create table tbl_plataforma (
+	id   int not null primary key auto_increment,
+    nome varchar (50) 
+);
+
+create table tbl_genero (
+	id int not null primary key auto_increment,
+    tipo_de_categoria varchar (45)
 );
 
 
