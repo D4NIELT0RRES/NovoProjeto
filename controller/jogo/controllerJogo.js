@@ -45,6 +45,7 @@ const inserirJogo = async function(jogo,contentType){
                         itemPlataforma.id_jogo = resultJogo.id
 
                         let resultPlataforma = await controllerPlataformaJogo.inserirPlataformaJogo(itemPlataforma,contentType)
+                        
 
                         if(!resultPlataforma){
                             return MESSAGE.ERROR_CONTENT_TYPE
@@ -275,7 +276,7 @@ const buscarJogo = async function(id){
                         delete itemJogo.id_faixa_etaria
     
                         let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorJogo(itemJogo.id)
-                        itemJogo.plataforma = dadosPlataforma.items
+                        itemJogo.plataforma = dadosPlataforma.plataforma
 
                         let dadosVersaoPlataformaJogo = await controllerPlataformaJogo.buscarVersaoPorJogo(itemJogo.id)
                         itemJogo.versoes = dadosVersaoPlataformaJogo.versoes

@@ -12,6 +12,8 @@ const MESSAGE = require('../../modulo/config')
 const versaoDAO = require('../../model/DAO/versao')
 const { deserializeRawResult } = require('@prisma/client/runtime/library')
 
+const controllerPlataformaJogo = require('../jogo/controllerPlataformaJogo')
+
 //Função para inserir uma nova versão
 const inserirVersao = async function (versao, contentType) {
     
@@ -116,6 +118,9 @@ const excluirVersao = async function (id) {
 //Função para retornar todos os jogos
 const listarVersao = async function () {
     try {
+
+        const arrayVersao = []
+
         let dadosVersao = {}
         //Chama a função para retornar os dados da versão
         let resultVersao = await versaoDAO.selectAllVersao()
@@ -128,6 +133,23 @@ const listarVersao = async function () {
                 dadosVersao.items = resultVersao.length
                 dadosVersao.games = resultVersao
 
+                for(itemVersao of resultVersao){
+
+                    let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorVersao(itemVersao.id_plataforma)
+
+                    itemVersao.plataforma = dadosPlataforma.games
+
+                    delete itemVersao.id_plataforma
+
+                    let dadosJogos = await controllerPlataformaJogo.buscarJogoPorVersap(itemVersao.id)
+                    itemVersao.jogo = dadosJogos.jogos
+
+                    arrayVersao.push(itemVersao)
+
+                }
+
+                dadosVersao.jogos = arrayVersao
+
                 return  dadosVersao//200
             }else{
                 return MESSAGE.ERROR_NOT_FOUND//400
@@ -135,7 +157,7 @@ const listarVersao = async function () {
         }else{
             return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
         }
-    } catch (error) {
+    }catch(error){
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
     }
 }
@@ -159,6 +181,21 @@ const buscarVersao = async function (id) {
                     dadosVersao.status = true
                     dadosVersao.status_code = 200
                     dadosVersao.games = resultVersao
+
+                    for(itemVersao of resultVersao){
+
+                        let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorVersao(itemVersao.id_plataforma)
+    
+                        itemVersao.plataforma = dadosPlataforma.games
+    
+                        delete itemVersao.id_plataforma
+    
+                        let dadosJogos = await controllerPlataformaJogo.buscarJogoPorVersap(itemVersao.id)
+                        itemVersao.jogo = dadosJogos.jogos
+    
+                        arrayVersao.push(itemVersao)
+    
+                    }
 
                     return dadosVersao//200
                 }else{

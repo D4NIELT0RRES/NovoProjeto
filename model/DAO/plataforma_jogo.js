@@ -14,10 +14,9 @@ const prisma = new PrismaClient()
 //Função para inserir um nova PlataformaJogo
 const insertPlataformaJogo = async function(PlataformaJogo){
     try {
-        let sql = `insert into tbl_plataforma_jogo  (
-                                                        id_plataforma,
+        let sql = `insert into tbl_plataforma_jogo  (   id_plataforma,
                                                         id_jogo,
-                                                        id_versao,
+                                                        id_versao
                                                     )values(
                                                         ${PlataformaJogo.id_plataforma},
                                                         ${PlataformaJogo.id_jogo},
@@ -31,7 +30,8 @@ const insertPlataformaJogo = async function(PlataformaJogo){
         }else{
             return false
         }
-    } catch(error){
+    }catch(error){
+        console.log(error);
         return false
     }
 }

@@ -133,7 +133,7 @@ const listarPlataformaJogo = async function(){
                 dadosPlataformaJogo.status = true
                 dadosPlataformaJogo.status_code = 200
                 dadosPlataformaJogo.items = resultPlataformaJogo.length
-                dadosPlataformaJogo.plata = resultPlataformaJogo
+                dadosPlataformaJogo.plataforma = resultPlataformaJogo
 
                 return dadosPlataformaJogo
             }else{

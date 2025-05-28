@@ -119,15 +119,25 @@ INNER JOIN tbl_jogo_empresa ON tbl_jogo.id = tbl_jogo_empresa.id_jogo
 INNER JOIN tbl_empresa ON tbl_empresa.id = tbl_jogo_empresa.id_empresa
 WHERE tbl_jogo.id = 6;
 
+SELECT tbl_plataforma.*
+FROM tbl_jogo
+INNER JOIN tbl_plataforma_jogo
+  ON tbl_jogo.id = tbl_plataforma_jogo.id_jogo
+INNER JOIN tbl_plataforma
+  ON tbl_plataforma.id = tbl_plataforma_jogo.id_plataforma
+WHERE tbl_jogo.id = 4;
 
 
-select * from tbl_jogo where id=12;
+
+select * from tbl_plataforma_jogo;
 show tables;
 desc tbl_faixa_etaria;
 select * from tbl_avaliacao order by id desc;
-desc tbl_avaliacao;
+desc tbl_plataforma_jogo;
 select * from tbl_faixa_etaria;
 delete from tbl_jogo where id=5;
 
 select * from tbl_jogo_empresa;
+
+
 

@@ -7,6 +7,7 @@
 
 //import da biblioteca do prisma client para executar os scripts SQL
 const { PrismaClient } = require('@prisma/client')
+const { ERROR_CONTENT_TYPE } = require('../../modulo/config')
 
 //Instancia (criar um objeto a ser utilizado) a biblioteca do prisma/client
 const prisma = new PrismaClient()
@@ -18,8 +19,8 @@ const insertJogoEmpresa = async function(JogoEmpresa){
         let sql = `insert into tbl_jogo_empresa (id_jogo,
                                                  id_empresa
                                                 ) values (
-                                                    '${JogoEmpresa.id_jogo}',
-                                                    '${JogoEmpresa.id_empresa}'
+                                                    ${JogoEmpresa.id_jogo},
+                                                    ${JogoEmpresa.id_empresa}
                                                 );`
         //Executa o scriptSQL no banco de dados e aguarda o retorno do BD para 
         //saber se deu certo                                  
@@ -31,6 +32,8 @@ const insertJogoEmpresa = async function(JogoEmpresa){
             return false
         }
     }catch(error){
+      console.log(error);
+      
         return false
     }
 }
