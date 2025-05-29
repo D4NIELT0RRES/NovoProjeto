@@ -51,8 +51,6 @@ const insertJogo = async function(jogo){
             return false
         }    
     } catch(error){        
-        console.log(error);
-        
         return false    
     }
 
