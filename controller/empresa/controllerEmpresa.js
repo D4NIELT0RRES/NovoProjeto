@@ -10,6 +10,9 @@ const MESSAGE = require('../../modulo/config')
 
 //Import do DAO para realizar um CRUD no banco de dados
 const empresaDAO = require('../../model/DAO/empresa.js')
+
+
+const controllerEmpresaJogo = require('../jogo/controllerJogoEmpresa.js')
 const { deserializeRawResult } = require('@prisma/client/runtime/library')
 
 //Função para inserir uma nova empresa
@@ -123,6 +126,7 @@ const listarEmpresa = async function () {
     
     try{
         
+        const arrayEmpresa = []
         let dadosEmpresa = {}
 
         //Chama função para retornar os dados da empresa
@@ -134,9 +138,13 @@ const listarEmpresa = async function () {
                 dadosEmpresa.status = true
                 dadosEmpresa.status_code = 200
                 dadosEmpresa.tipo_de_empresa = resultEmpresa.length
-                dadosEmpresa.games = resultEmpresa
-
-                return dadosEmpresa //200
+                for(item of resultEmpresa){
+                    let dadosJogoEmpresa = await controllerEmpresaJogo.buscarJogoPorEmpresa(item.id)
+                    item.jogos = dadosJogoEmpresa.jogos
+                    arrayEmpresa.push(item)
+                }
+                dadosEmpresa.empresas = arrayEmpresa
+                return dadosEmpresa//200
             }else{
                 return MESSAGE.ERROR_NOT_FOUND//400 
             }
@@ -155,6 +163,7 @@ const buscarEmpresa = async function (id){
          if(id == "" || id == undefined || id == null || isNaN(id) || id <= 0){
             return MESSAGE.ERROR_REQUIRED_FIELDS//400
         }else{
+            const arrayEmpresa = []
             let dadosEmpresa = {}
 
             //Chama a função para retornar os dados da empresa
@@ -166,8 +175,12 @@ const buscarEmpresa = async function (id){
                     //Cria um objeto do tipo JSON para retornar a lista de jogos
                     dadosEmpresa.status = true
                     dadosEmpresa.status_code = 200
-                    dadosEmpresa.games = resultEmpresa
-
+                    for(item of resultEmpresa){
+                        let dadosJogoEmpresa = await controllerEmpresaJogo.buscarJogoPorEmpresa(item.id)
+                        item.jogos = dadosJogoEmpresa.jogos
+                        arrayEmpresa.push(item)
+                    }
+                    dadosEmpresa.empresas = arrayEmpresa
                     return dadosEmpresa//200
                 }else{
                     return MESSAGE.ERROR_NOT_FOUND//404
@@ -176,7 +189,7 @@ const buscarEmpresa = async function (id){
             return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
             }
         }
-    } catch(error) {
+    }catch(error){        
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
     }
 }

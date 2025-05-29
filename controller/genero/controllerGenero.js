@@ -10,6 +10,8 @@ const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar um CRUD no banco de dados
 const generoDAO = require('../../model/DAO/genero.js')
+
+const controllerJogo = require('../jogo/controllerGeneroJogo.js')
 const { buscarJogo } = require('../jogo/controllerJogo.js')
 
 //Função para inserir um novo genero
@@ -118,6 +120,7 @@ const excluirGenero = async function (id) {
 const listarGenero = async function () {
     
     try {
+        const arrayGenero = []
         let dadosGenero = {}
 
         //Chama função para retornar os dados do genero
@@ -129,8 +132,15 @@ const listarGenero = async function () {
                 dadosGenero.status = true
                 dadosGenero.status_code = 200
                 dadosGenero.tipo_de_categoria = resultGenero.length
-                dadosGenero.games = resultGenero
 
+                for(itemGenero of resultGenero){
+                    let dadosGeneroJogo = await controllerJogo.buscarJogoPorGenero(itemGenero.id)
+                    itemGenero.jogos = dadosGeneroJogo.jogos
+
+                    arrayGenero.push(itemGenero)
+                }
+
+                dadosGenero.generos = arrayGenero
                 return dadosGenero //200
             }else{
                 return MESSAGE.ERROR_NOT_FOUND//400
@@ -150,6 +160,7 @@ const buscarGenero = async function (id) {
         if(id == undefined || id == '' || id == null || isNaN(id) || id <= 0){
             return MESSAGE.ERROR_REQUIRED_FIELDS//400
         }else{
+            const arrayGenero = []
             let dadosGenero = {}
 
             //Chama a função para retornar os dados do genero
@@ -160,8 +171,14 @@ const buscarGenero = async function (id) {
                     //Cria um objeto do tipo JSON para retornar a lista de jogos
                     dadosGenero.status = true
                     dadosGenero.status_code = 200
-                    dadosGenero.games = resultGenero  
-
+                    for(itemGenero of resultGenero){
+                        let dadosGeneroJogo = await controllerJogo.buscarJogoPorGenero(itemGenero.id)
+                        itemGenero.jogos = dadosGeneroJogo.jogos
+    
+                        arrayGenero.push(itemGenero)
+                    }
+    
+                    dadosGenero.genero = arrayGenero
                     return dadosGenero//200
                 }else{
                     return MESSAGE.ERROR_NOT_FOUND//404

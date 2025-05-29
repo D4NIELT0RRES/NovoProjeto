@@ -131,18 +131,11 @@ const listarVersao = async function () {
                 dadosVersao.status = true
                 dadosVersao.status_code = 200
                 dadosVersao.items = resultVersao.length
-                dadosVersao.games = resultVersao
 
                 for(itemVersao of resultVersao){
 
-                    let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorVersao(itemVersao.id_plataforma)
-
-                    itemVersao.plataforma = dadosPlataforma.games
-
-                    delete itemVersao.id_plataforma
-
-                    let dadosJogos = await controllerPlataformaJogo.buscarJogoPorVersap(itemVersao.id)
-                    itemVersao.jogo = dadosJogos.jogos
+                    let dadosPlataforma = await controllerPlataformaJogo.buscarJogoPorVersap(itemVersao.id_plataforma)
+                    itemVersao.jogos = dadosPlataforma.jogos
 
                     arrayVersao.push(itemVersao)
 
@@ -169,6 +162,7 @@ const buscarVersao = async function (id) {
         if (id == undefined   || id == '' || id == null || isNaN(id) || id <= 0) {
             return MESSAGE.ERROR_REQUIRED_FIELDS//400
         }else{
+            const arrayVersao = []
             let dadosVersao = {}
             
             //Chama a função para retornar os dados do jogo
@@ -184,18 +178,14 @@ const buscarVersao = async function (id) {
 
                     for(itemVersao of resultVersao){
 
-                        let dadosPlataforma = await controllerPlataformaJogo.buscarPlataformaPorVersao(itemVersao.id_plataforma)
-    
-                        itemVersao.plataforma = dadosPlataforma.games
-    
-                        delete itemVersao.id_plataforma
-    
-                        let dadosJogos = await controllerPlataformaJogo.buscarJogoPorVersap(itemVersao.id)
-                        itemVersao.jogo = dadosJogos.jogos
+                        let dadosPlataforma = await controllerPlataformaJogo.buscarJogoPorVersap(itemVersao.id_plataforma)
+                        itemVersao.jogos = dadosPlataforma.jogos
     
                         arrayVersao.push(itemVersao)
     
                     }
+    
+                    dadosVersao.jogos = arrayVersao
 
                     return dadosVersao//200
                 }else{

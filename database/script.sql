@@ -134,7 +134,7 @@ show tables;
 desc tbl_faixa_etaria;
 select * from tbl_avaliacao order by id desc;
 desc tbl_plataforma_jogo;
-select * from tbl_faixa_etaria;
+select * from tbl_empresa;
 delete from tbl_jogo where id=5;
 
 select * from tbl_jogo_empresa;

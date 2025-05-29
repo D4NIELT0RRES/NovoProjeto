@@ -196,11 +196,42 @@ const buscarJogoEmpresa = async function(idEmpresa){
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
+
+const buscarJogoPorEmpresa = async function (idEmpresa) {
+    
+    try {
+        if(idEmpresa == '' || idEmpresa == undefined || idEmpresa == null || isNaN(idEmpresa) || idEmpresa <=0){
+            return MESSAGE.ERROR_REQUIRED_FIELDS//400
+        }else{
+            let dadosJogoPorEmpresa = {}
+
+            let resultJogoPorEmpresa = await jogoEmpresaDAO.selectJogoByIdEmpresa(parseInt(idEmpresa))
+
+            if(resultJogoPorEmpresa != false || typeof(resultJogoPorEmpresa) == 'object'){
+                if(resultJogoPorEmpresa.length > 0){
+
+                    dadosJogoPorEmpresa.status = true
+                    dadosJogoPorEmpresa.status_code = 200
+                    dadosJogoPorEmpresa.jogos = resultJogoPorEmpresa
+
+                    return dadosJogoPorEmpresa
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND//404
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL//500
+            }
+        }  
+    }catch(error){
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER//500
+    }
+}
 module.exports = {
     inserirJogoEmpresa,
     atualizarJogoEmpresa,
     excluirJogoEmpresa,
     listarJogoEmpresa,
     buscarJogoEmpresa,
-    buscarEmpresaPorJogo
+    buscarEmpresaPorJogo,
+    buscarJogoPorEmpresa
 }
